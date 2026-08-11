@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_dashboard_view_form" model="ir.ui.view">
+        <field name="name">hseq.dashboard.form</field>
+        <field name="model">hseq.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="HSEQ MAPEI">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>HSEQ MAPEI</h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="site_id"
+                                   placeholder="Todas las sedes"
+                                   options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                    <group string="Indicadores" col="4">
+                        <group>
+                            <field name="accident_count" readonly="1"/>
+                            <field name="incident_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="near_miss_count" readonly="1"/>
+                            <field name="critical_risk_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="open_nc_count" readonly="1"/>
+                            <field name="overdue_action_count" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="pending_inspection_count" readonly="1"/>
+                            <field name="action_compliance" readonly="1" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <group string="Acceso rápido">
+                        <div colspan="2">
+                            <button name="action_open_accidents" type="object"
+                                    string="Accidentes" class="btn btn-secondary me-2 mb-2"/>
+                            <button name="action_open_incidents" type="object"
+                                    string="Incidentes" class="btn btn-secondary me-2 mb-2"/>
+                            <button name="action_open_critical_risks" type="object"
+                                    string="Riesgos críticos" class="btn btn-secondary me-2 mb-2"/>
+                            <button name="action_open_nc" type="object"
+                                    string="NC abiertas" class="btn btn-secondary me-2 mb-2"/>
+                            <button name="action_open_overdue_actions" type="object"
+                                    string="Acciones vencidas" class="btn btn-secondary me-2 mb-2"/>
+                            <button name="action_open_pending_inspections" type="object"
+                                    string="Inspecciones pendientes"
+                                    class="btn btn-secondary me-2 mb-2"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_dashboard_action" model="ir.actions.act_window">
+        <field name="name">Dashboard HSEQ</field>
+        <field name="res_model">hseq.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+
+    <menuitem id="menu_hseq_dashboard" name="Dashboard"
+              parent="hseq_core.menu_hseq_root"
+              action="hseq_dashboard_action" sequence="10"/>
+</odoo>

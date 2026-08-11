@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_inspection_template_user,hseq.inspection.template.user,model_hseq_inspection_template,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_inspection_template_responsible,hseq.inspection.template.responsible,model_hseq_inspection_template,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_inspection_template_manager,hseq.inspection.template.manager,model_hseq_inspection_template,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_inspection_template_question_user,hseq.inspection.template.question.user,model_hseq_inspection_template_question,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_inspection_template_question_responsible,hseq.inspection.template.question.responsible,model_hseq_inspection_template_question,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_inspection_template_question_manager,hseq.inspection.template.question.manager,model_hseq_inspection_template_question,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_inspection_user,hseq.inspection.user,model_hseq_inspection,hseq_core.group_hseq_user,1,1,1,0
+access_hseq_inspection_manager,hseq.inspection.manager,model_hseq_inspection,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_inspection_line_user,hseq.inspection.line.user,model_hseq_inspection_line,hseq_core.group_hseq_user,1,1,1,1
+access_hseq_inspection_line_manager,hseq.inspection.line.manager,model_hseq_inspection_line,hseq_core.group_hseq_manager,1,1,1,1

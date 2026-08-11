@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_action_plan_user,hseq.action.plan.user,model_hseq_action_plan,hseq_core.group_hseq_user,1,1,1,0
+access_hseq_action_plan_manager,hseq.action.plan.manager,model_hseq_action_plan,hseq_core.group_hseq_manager,1,1,1,1

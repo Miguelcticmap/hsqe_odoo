@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_audit_view_list" model="ir.ui.view">
+        <field name="name">hseq.audit.list</field>
+        <field name="model">hseq.audit</field>
+        <field name="arch" type="xml">
+            <list string="Auditorías">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="audit_type"/>
+                <field name="standard" optional="show"/>
+                <field name="site_id"/>
+                <field name="date_start"/>
+                <field name="lead_auditor_id" widget="many2one_avatar_user"/>
+                <field name="finding_count" string="Hallazgos"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-info="state == 'execution'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_audit_view_form" model="ir.ui.view">
+        <field name="name">hseq.audit.form</field>
+        <field name="model">hseq.audit</field>
+        <field name="arch" type="xml">
+            <form string="Auditoría">
+                <header>
+                    <button name="action_preparation" string="Preparación" type="object"
+                            class="btn-primary" invisible="state != 'planned'"
+                            groups="hseq_core.group_hseq_auditor"/>
+                    <button name="action_execution" string="Ejecutar" type="object"
+                            class="btn-primary" invisible="state != 'preparation'"
+                            groups="hseq_core.group_hseq_auditor"/>
+                    <button name="action_report" string="Informe" type="object"
+                            class="btn-primary" invisible="state != 'execution'"
+                            groups="hseq_core.group_hseq_auditor"/>
+                    <button name="action_follow_up" string="Seguimiento" type="object"
+                            class="btn-primary" invisible="state != 'report'"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            class="btn-primary" invisible="state != 'follow_up'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_action_plans" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="action_plan_count" widget="statinfo" string="Acciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Título de la auditoría"/></h2>
+                    </div>
+                    <group>
+                        <group string="Clasificación">
+                            <field name="audit_type"/>
+                            <field name="standard"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                            <field name="audited_partner_id"
+                                   invisible="audit_type not in ('external', 'supplier')"/>
+                        </group>
+                        <group string="Equipo">
+                            <field name="lead_auditor_id" widget="many2one_avatar_user"/>
+                            <field name="auditor_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Alcance y objetivo" name="scope">
+                            <group>
+                                <field name="objective"/>
+                                <field name="scope"/>
+                            </group>
+                        </page>
+                        <page string="Hallazgos" name="findings">
+                            <field name="finding_ids">
+                                <list editable="bottom"
+                                      decoration-danger="finding_type == 'nc_major'"
+                                      decoration-warning="finding_type == 'nc_minor'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="finding_type"/>
+                                    <field name="criterion"/>
+                                    <field name="evidence"/>
+                                    <field name="nonconformity_id"/>
+                                    <button name="action_create_nonconformity" type="object"
+                                            string="Generar NC" icon="fa-exclamation-triangle"
+                                            invisible="nonconformity_id or finding_type not in ('nc_major', 'nc_minor')"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Informe" name="report">
+                            <field name="conclusions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_audit_view_search" model="ir.ui.view">
+        <field name="name">hseq.audit.search</field>
+        <field name="model">hseq.audit</field>
+        <field name="arch" type="xml">
+            <search string="Auditorías">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="site_id"/>
+                <filter string="Abiertas" name="open" domain="[('state', '!=', 'closed')]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'audit_type'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_audit_action" model="ir.actions.act_window">
+        <field name="name">Auditorías</field>
+        <field name="res_model">hseq.audit</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_audit_main" name="Auditorías"
+              parent="hseq_core.menu_hseq_audits" action="hseq_audit_action" sequence="10"/>
+    <menuitem id="menu_hseq_audit_quality" name="Auditorías"
+              parent="hseq_core.menu_hseq_quality" action="hseq_audit_action" sequence="20"/>
+</odoo>

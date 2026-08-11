@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_hseq_inspection" model="ir.sequence">
+            <field name="name">Inspección HSEQ</field>
+            <field name="code">hseq.inspection</field>
+            <field name="prefix">INS-</field>
+            <field name="padding">5</field>
+        </record>
+        <record id="template_extinguishers" model="hseq.inspection.template">
+            <field name="name">Inspección de extintores</field>
+            <field name="code">EXT</field>
+            <field name="auto_create_action" eval="True"/>
+        </record>
+        <record id="template_extinguishers_q1" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Extintor presente en su ubicación</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="template_extinguishers_q2" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Acceso libre de obstáculos</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="template_extinguishers_q3" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Señalización visible</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="template_extinguishers_q4" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Manómetro en zona verde</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="template_extinguishers_q5" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Sello de seguridad intacto</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="template_extinguishers_q6" model="hseq.inspection.template.question">
+            <field name="template_id" ref="template_extinguishers"/>
+            <field name="name">Fecha de recarga vigente</field>
+            <field name="sequence">60</field>
+        </record>
+    </data>
+</odoo>

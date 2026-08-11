@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_audit_user,hseq.audit.user,model_hseq_audit,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_audit_auditor,hseq.audit.auditor,model_hseq_audit,hseq_core.group_hseq_auditor,1,1,1,0
+access_hseq_audit_manager,hseq.audit.manager,model_hseq_audit,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_audit_finding_user,hseq.audit.finding.user,model_hseq_audit_finding,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_audit_finding_auditor,hseq.audit.finding.auditor,model_hseq_audit_finding,hseq_core.group_hseq_auditor,1,1,1,1
+access_hseq_audit_finding_manager,hseq.audit.finding.manager,model_hseq_audit_finding,hseq_core.group_hseq_manager,1,1,1,1

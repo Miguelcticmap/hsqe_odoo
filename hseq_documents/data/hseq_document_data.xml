@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="doc_type_policy" model="hseq.document.type">
+            <field name="name">Política</field>
+            <field name="code">POL</field>
+        </record>
+        <record id="doc_type_manual" model="hseq.document.type">
+            <field name="name">Manual</field>
+            <field name="code">MAN</field>
+        </record>
+        <record id="doc_type_procedure" model="hseq.document.type">
+            <field name="name">Procedimiento</field>
+            <field name="code">PRO</field>
+        </record>
+        <record id="doc_type_instruction" model="hseq.document.type">
+            <field name="name">Instructivo</field>
+            <field name="code">INS</field>
+        </record>
+        <record id="doc_type_format" model="hseq.document.type">
+            <field name="name">Formato</field>
+            <field name="code">FOR</field>
+        </record>
+        <record id="doc_type_record" model="hseq.document.type">
+            <field name="name">Registro</field>
+            <field name="code">REG</field>
+        </record>
+        <record id="doc_type_matrix" model="hseq.document.type">
+            <field name="name">Matriz</field>
+            <field name="code">MAT</field>
+        </record>
+        <record id="doc_type_certificate" model="hseq.document.type">
+            <field name="name">Certificado</field>
+            <field name="code">CER</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_environmental_aspect_view_list" model="ir.ui.view">
+        <field name="name">hseq.environmental.aspect.list</field>
+        <field name="model">hseq.environmental.aspect</field>
+        <field name="arch" type="xml">
+            <list string="Aspectos e Impactos" decoration-danger="significant">
+                <field name="name"/>
+                <field name="aspect"/>
+                <field name="impact"/>
+                <field name="aspect_type"/>
+                <field name="site_id"/>
+                <field name="significance"/>
+                <field name="significant" widget="boolean_toggle" readonly="1"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_environmental_aspect_view_form" model="ir.ui.view">
+        <field name="name">hseq.environmental.aspect.form</field>
+        <field name="model">hseq.environmental.aspect</field>
+        <field name="arch" type="xml">
+            <form string="Aspecto Ambiental">
+                <header>
+                    <button name="action_evaluate" string="Evaluar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_control" string="Marcar controlado" type="object"
+                            class="btn-primary" invisible="state != 'evaluated'"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            invisible="state != 'controlled'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="aspect" placeholder="Aspecto ambiental"/></h2>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="impact"/>
+                            <field name="aspect_type"/>
+                            <field name="condition"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="site_id" required="1"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                        </group>
+                        <group string="Evaluación">
+                            <field name="frequency"/>
+                            <field name="severity"/>
+                            <field name="significance"/>
+                            <field name="significant"/>
+                        </group>
+                    </group>
+                    <group string="Controles operacionales">
+                        <field name="controls" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_environmental_aspect_view_search" model="ir.ui.view">
+        <field name="name">hseq.environmental.aspect.search</field>
+        <field name="model">hseq.environmental.aspect</field>
+        <field name="arch" type="xml">
+            <search string="Aspectos Ambientales">
+                <field name="aspect"/>
+                <field name="site_id"/>
+                <filter string="Significativos" name="significant"
+                        domain="[('significant', '=', True)]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'aspect_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_environmental_aspect_action" model="ir.actions.act_window">
+        <field name="name">Aspectos e Impactos</field>
+        <field name="res_model">hseq.environmental.aspect</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_consumption_view_list" model="ir.ui.view">
+        <field name="name">hseq.consumption.list</field>
+        <field name="model">hseq.consumption</field>
+        <field name="arch" type="xml">
+            <list string="Consumos" editable="bottom">
+                <field name="date"/>
+                <field name="consumption_type"/>
+                <field name="site_id"/>
+                <field name="quantity"/>
+                <field name="uom"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_consumption_view_graph" model="ir.ui.view">
+        <field name="name">hseq.consumption.graph</field>
+        <field name="model">hseq.consumption</field>
+        <field name="arch" type="xml">
+            <graph string="Consumos" type="line">
+                <field name="date" interval="month"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hseq_consumption_action" model="ir.actions.act_window">
+        <field name="name">Consumos</field>
+        <field name="res_model">hseq.consumption</field>
+        <field name="view_mode">list,graph,pivot</field>
+    </record>
+
+    <record id="hseq_consumption_view_pivot" model="ir.ui.view">
+        <field name="name">hseq.consumption.pivot</field>
+        <field name="model">hseq.consumption</field>
+        <field name="arch" type="xml">
+            <pivot string="Consumos">
+                <field name="site_id" type="row"/>
+                <field name="consumption_type" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <menuitem id="menu_hseq_env_aspects" name="Aspectos e Impactos"
+              parent="hseq_core.menu_hseq_environment"
+              action="hseq_environmental_aspect_action" sequence="10"/>
+    <menuitem id="menu_hseq_env_consumption" name="Consumos"
+              parent="hseq_core.menu_hseq_environment"
+              action="hseq_consumption_action" sequence="30"/>
+</odoo>

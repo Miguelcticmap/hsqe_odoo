@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_hazard_type_user,hseq.hazard.type.user,model_hseq_hazard_type,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_hazard_type_manager,hseq.hazard.type.manager,model_hseq_hazard_type,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_risk_user,hseq.risk.user,model_hseq_risk,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_risk_responsible,hseq.risk.responsible,model_hseq_risk,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_risk_manager,hseq.risk.manager,model_hseq_risk,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_risk_control_user,hseq.risk.control.user,model_hseq_risk_control,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_risk_control_responsible,hseq.risk.control.responsible,model_hseq_risk_control,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_risk_control_manager,hseq.risk.control.manager,model_hseq_risk_control,hseq_core.group_hseq_manager,1,1,1,1

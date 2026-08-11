@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_document_type_user,hseq.document.type.user,model_hseq_document_type,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_document_type_manager,hseq.document.type.manager,model_hseq_document_type,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_document_user,hseq.document.user,model_hseq_document,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_document_responsible,hseq.document.responsible,model_hseq_document,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_document_manager,hseq.document.manager,model_hseq_document,hseq_core.group_hseq_manager,1,1,1,1

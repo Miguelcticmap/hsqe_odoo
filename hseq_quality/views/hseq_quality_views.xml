@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_improvement_view_list" model="ir.ui.view">
+        <field name="name">hseq.improvement.list</field>
+        <field name="model">hseq.improvement</field>
+        <field name="arch" type="xml">
+            <list string="Mejoras">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="title"/>
+                <field name="site_id"/>
+                <field name="proposed_by_id" widget="many2one_avatar_user"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_improvement_view_form" model="ir.ui.view">
+        <field name="name">hseq.improvement.form</field>
+        <field name="model">hseq.improvement</field>
+        <field name="arch" type="xml">
+            <form string="Oportunidad de Mejora">
+                <header>
+                    <button name="action_evaluate" string="Evaluar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Aprobar" type="object"
+                            class="btn-primary" invisible="state != 'evaluation'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_implement" string="Implementar" type="object"
+                            class="btn-primary" invisible="state != 'approved'"/>
+                    <button name="action_done" string="Finalizar" type="object"
+                            class="btn-primary" invisible="state != 'implementation'"/>
+                    <button name="action_reject" string="Rechazar" type="object"
+                            invisible="state in ('done', 'rejected')"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,evaluation,approved,implementation,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Título de la mejora"/></h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="proposed_by_id" widget="many2one_avatar_user"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group>
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descripción" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Beneficio esperado" name="benefit">
+                            <field name="expected_benefit"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_improvement_action" model="ir.actions.act_window">
+        <field name="name">Mejora</field>
+        <field name="res_model">hseq.improvement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_improvement" name="Mejora"
+              parent="hseq_core.menu_hseq_quality" action="hseq_improvement_action" sequence="30"/>
+</odoo>

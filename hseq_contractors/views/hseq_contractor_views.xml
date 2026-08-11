@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_contractor_view_list" model="ir.ui.view">
+        <field name="name">hseq.contractor.list</field>
+        <field name="model">hseq.contractor</field>
+        <field name="arch" type="xml">
+            <list string="Contratistas" decoration-danger="state == 'blocked'"
+                  decoration-warning="expired_doc_count > 0">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="service"/>
+                <field name="site_ids" widget="many2many_tags"/>
+                <field name="expired_doc_count"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state in ('rejected', 'blocked')"
+                       decoration-warning="state == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_contractor_view_form" model="ir.ui.view">
+        <field name="name">hseq.contractor.form</field>
+        <field name="model">hseq.contractor</field>
+        <field name="arch" type="xml">
+            <form string="Contratista">
+                <header>
+                    <button name="action_review" string="Enviar a revisión" type="object"
+                            class="btn-primary" invisible="state != 'pending'"/>
+                    <button name="action_approve" string="Aprobar" type="object"
+                            class="btn-primary" invisible="state != 'review'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_reject" string="Rechazar" type="object"
+                            invisible="state != 'review'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_expire" string="Marcar vencido" type="object"
+                            invisible="state != 'approved'"/>
+                    <button name="action_block" string="Bloquear" type="object"
+                            invisible="state in ('blocked',)"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_reset" string="Reiniciar" type="object"
+                            invisible="state not in ('rejected', 'expired', 'blocked')"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="pending,review,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Contratista">
+                            <field name="partner_id"/>
+                            <field name="service"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Habilitación">
+                            <field name="site_ids" widget="many2many_tags"/>
+                            <field name="induction_done"/>
+                            <field name="induction_date" invisible="not induction_done"/>
+                            <field name="expired_doc_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Documentación" name="documents">
+                            <field name="document_ids">
+                                <list editable="bottom" decoration-danger="not valid">
+                                    <field name="name"/>
+                                    <field name="file" filename="file_name"/>
+                                    <field name="file_name" column_invisible="1"/>
+                                    <field name="date_expiry"/>
+                                    <field name="valid"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Personal" name="workers">
+                            <field name="worker_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="identification"/>
+                                    <field name="role"/>
+                                    <field name="arl_ok"/>
+                                    <field name="social_security_ok"/>
+                                    <field name="induction_done"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_contractor_view_search" model="ir.ui.view">
+        <field name="name">hseq.contractor.search</field>
+        <field name="model">hseq.contractor</field>
+        <field name="arch" type="xml">
+            <search string="Contratistas">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter string="Aprobados" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Pendientes" name="pending"
+                        domain="[('state', 'in', ('pending', 'review'))]"/>
+                <separator/>
+                <group>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_contractor_action" model="ir.actions.act_window">
+        <field name="name">Contratistas</field>
+        <field name="res_model">hseq.contractor</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_contractor" name="Contratistas"
+              parent="hseq_core.menu_hseq_compliance"
+              action="hseq_contractor_action" sequence="20"/>
+</odoo>

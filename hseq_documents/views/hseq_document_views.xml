@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_document_view_list" model="ir.ui.view">
+        <field name="name">hseq.document.list</field>
+        <field name="model">hseq.document</field>
+        <field name="arch" type="xml">
+            <list string="Documentos">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="document_type_id"/>
+                <field name="version"/>
+                <field name="site_id" optional="show"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="date_expiry" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'current'"
+                       decoration-muted="state == 'obsolete'"
+                       decoration-info="state in ('review', 'approval')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_document_view_form" model="ir.ui.view">
+        <field name="name">hseq.document.form</field>
+        <field name="model">hseq.document</field>
+        <field name="arch" type="xml">
+            <form string="Documento">
+                <header>
+                    <button name="action_review" string="Enviar a revisión" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approval" string="Enviar a aprobación" type="object"
+                            class="btn-primary" invisible="state != 'review'"/>
+                    <button name="action_approve" string="Aprobar" type="object"
+                            class="btn-primary" invisible="state != 'approval'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_obsolete" string="Marcar obsoleto" type="object"
+                            invisible="state != 'current'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_new_version" string="Nueva versión" type="object"
+                            invisible="state != 'current'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Título del documento"/></h1>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="code"/>
+                            <field name="document_type_id"/>
+                            <field name="version"/>
+                        </group>
+                        <group string="Asociación">
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                        </group>
+                        <group string="Responsables">
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                            <field name="approver_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Fechas">
+                            <field name="date_issued"/>
+                            <field name="date_approved"/>
+                            <field name="date_expiry"/>
+                        </group>
+                    </group>
+                    <group string="Archivo">
+                        <field name="file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group string="Descripción">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_document_view_search" model="ir.ui.view">
+        <field name="name">hseq.document.search</field>
+        <field name="model">hseq.document</field>
+        <field name="arch" type="xml">
+            <search string="Documentos">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="site_id"/>
+                <filter string="Vigentes" name="current" domain="[('state', '=', 'current')]"/>
+                <filter string="Pendientes de aprobación" name="approval"
+                        domain="[('state', 'in', ('review', 'approval'))]"/>
+                <separator/>
+                <group>
+                    <filter string="Tipo" name="group_type"
+                            context="{'group_by': 'document_type_id'}"/>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_document_action" model="ir.actions.act_window">
+        <field name="name">Documentos</field>
+        <field name="res_model">hseq.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_current': 1}</field>
+    </record>
+
+    <record id="hseq_document_type_action" model="ir.actions.act_window">
+        <field name="name">Tipos de Documento</field>
+        <field name="res_model">hseq.document.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_document_type_view_list" model="ir.ui.view">
+        <field name="name">hseq.document.type.list</field>
+        <field name="model">hseq.document.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Documento" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem id="menu_hseq_document" name="Documentos"
+              parent="hseq_core.menu_hseq_documents"
+              action="hseq_document_action" sequence="10"/>
+    <menuitem id="menu_hseq_document_type" name="Tipos de Documento"
+              parent="hseq_core.menu_hseq_config"
+              action="hseq_document_type_action" sequence="90"/>
+</odoo>

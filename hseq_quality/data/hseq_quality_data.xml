@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_hseq_improvement" model="ir.sequence">
+            <field name="name">Oportunidad de Mejora</field>
+            <field name="code">hseq.improvement</field>
+            <field name="prefix">MEJ-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>

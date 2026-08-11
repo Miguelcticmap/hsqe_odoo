@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_inspection_template_view_list" model="ir.ui.view">
+        <field name="name">hseq.inspection.template.list</field>
+        <field name="model">hseq.inspection.template</field>
+        <field name="arch" type="xml">
+            <list string="Plantillas de Inspección">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="auto_create_action"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_inspection_template_view_form" model="ir.ui.view">
+        <field name="name">hseq.inspection.template.form</field>
+        <field name="model">hseq.inspection.template</field>
+        <field name="arch" type="xml">
+            <form string="Plantilla de Inspección">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nombre de la plantilla"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="auto_create_action"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Preguntas" name="questions">
+                            <field name="question_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="answer_type"/>
+                                    <field name="mandatory_evidence"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Descripción" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_inspection_view_list" model="ir.ui.view">
+        <field name="name">hseq.inspection.list</field>
+        <field name="model">hseq.inspection</field>
+        <field name="arch" type="xml">
+            <list string="Inspecciones">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="template_id"/>
+                <field name="site_id"/>
+                <field name="area_id" optional="show"/>
+                <field name="inspector_id" widget="many2one_avatar_user"/>
+                <field name="compliance_rate" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'in_progress'"
+                       decoration-success="state in ('done', 'closed')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_inspection_view_form" model="ir.ui.view">
+        <field name="name">hseq.inspection.form</field>
+        <field name="model">hseq.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Inspección">
+                <header>
+                    <button name="action_start" string="Iniciar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Finalizar" type="object"
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            invisible="state != 'done'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_action_plans" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="action_plan_count" widget="statinfo" string="Acciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="template_id" readonly="state != 'draft'"/>
+                            <field name="date"/>
+                            <field name="inspector_id" widget="many2one_avatar_user"/>
+                            <field name="compliance_rate" widget="progressbar"/>
+                        </group>
+                        <group>
+                            <field name="site_id" required="1"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Checklist" name="lines">
+                            <field name="line_ids" readonly="state in ('done', 'closed')">
+                                <list editable="bottom" decoration-danger="answer == 'no'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="answer_type" column_invisible="1"/>
+                                    <field name="answer"/>
+                                    <field name="value_numeric" optional="hide"/>
+                                    <field name="value_text" optional="hide"/>
+                                    <field name="comments"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_inspection_view_search" model="ir.ui.view">
+        <field name="name">hseq.inspection.search</field>
+        <field name="model">hseq.inspection</field>
+        <field name="arch" type="xml">
+            <search string="Inspecciones">
+                <field name="name"/>
+                <field name="template_id"/>
+                <field name="site_id"/>
+                <filter string="Pendientes" name="pending"
+                        domain="[('state', 'in', ('draft', 'in_progress'))]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Plantilla" name="group_template"
+                            context="{'group_by': 'template_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_inspection_action" model="ir.actions.act_window">
+        <field name="name">Inspecciones</field>
+        <field name="res_model">hseq.inspection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_inspection_template_action" model="ir.actions.act_window">
+        <field name="name">Plantillas de Inspección</field>
+        <field name="res_model">hseq.inspection.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_inspection" name="Inspecciones"
+              parent="hseq_core.menu_hseq_sst" action="hseq_inspection_action" sequence="30"/>
+    <menuitem id="menu_hseq_inspection_template" name="Plantillas de Inspección"
+              parent="hseq_core.menu_hseq_config" action="hseq_inspection_template_action" sequence="60"/>
+</odoo>

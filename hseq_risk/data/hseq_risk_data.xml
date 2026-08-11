@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="seq_hseq_risk" model="ir.sequence">
+            <field name="name">Riesgo HSEQ</field>
+            <field name="code">hseq.risk</field>
+            <field name="prefix">RSG-</field>
+            <field name="padding">5</field>
+        </record>
+        <record id="hazard_type_chemical" model="hseq.hazard.type">
+            <field name="name">Químico</field>
+            <field name="code">QUI</field>
+        </record>
+        <record id="hazard_type_physical" model="hseq.hazard.type">
+            <field name="name">Físico</field>
+            <field name="code">FIS</field>
+        </record>
+        <record id="hazard_type_mechanical" model="hseq.hazard.type">
+            <field name="name">Mecánico</field>
+            <field name="code">MEC</field>
+        </record>
+        <record id="hazard_type_biomechanical" model="hseq.hazard.type">
+            <field name="name">Biomecánico</field>
+            <field name="code">BIO</field>
+        </record>
+        <record id="hazard_type_psychosocial" model="hseq.hazard.type">
+            <field name="name">Psicosocial</field>
+            <field name="code">PSI</field>
+        </record>
+        <record id="hazard_type_biological" model="hseq.hazard.type">
+            <field name="name">Biológico</field>
+            <field name="code">BIL</field>
+        </record>
+        <record id="hazard_type_electrical" model="hseq.hazard.type">
+            <field name="name">Eléctrico</field>
+            <field name="code">ELE</field>
+        </record>
+        <record id="hazard_type_locative" model="hseq.hazard.type">
+            <field name="name">Locativo</field>
+            <field name="code">LOC</field>
+        </record>
+        <record id="hazard_type_natural" model="hseq.hazard.type">
+            <field name="name">Fenómenos naturales</field>
+            <field name="code">NAT</field>
+        </record>
+        <record id="hazard_type_environmental" model="hseq.hazard.type">
+            <field name="name">Ambiental</field>
+            <field name="code">AMB</field>
+        </record>
+    </data>
+</odoo>

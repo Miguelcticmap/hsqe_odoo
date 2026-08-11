@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_risk_view_list" model="ir.ui.view">
+        <field name="name">hseq.risk.list</field>
+        <field name="model">hseq.risk</field>
+        <field name="arch" type="xml">
+            <list string="Riesgos"
+                  decoration-danger="residual_level == 'critical'"
+                  decoration-warning="residual_level == 'high'">
+                <field name="name"/>
+                <field name="hazard_type_id"/>
+                <field name="hazard_description"/>
+                <field name="domain_type" optional="show"/>
+                <field name="site_id"/>
+                <field name="area_id" optional="show"/>
+                <field name="process_id" optional="hide"/>
+                <field name="inherent_level" widget="badge"
+                       decoration-success="inherent_level == 'low'"
+                       decoration-info="inherent_level == 'medium'"
+                       decoration-warning="inherent_level == 'high'"
+                       decoration-danger="inherent_level == 'critical'"/>
+                <field name="residual_level" widget="badge"
+                       decoration-success="residual_level == 'low'"
+                       decoration-info="residual_level == 'medium'"
+                       decoration-warning="residual_level == 'high'"
+                       decoration-danger="residual_level == 'critical'"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_risk_view_form" model="ir.ui.view">
+        <field name="name">hseq.risk.form</field>
+        <field name="model">hseq.risk</field>
+        <field name="arch" type="xml">
+            <form string="Riesgo">
+                <header>
+                    <button name="action_evaluate" string="Evaluar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_control" string="Marcar controlado" type="object"
+                            class="btn-primary" invisible="state != 'evaluated'"/>
+                    <button name="action_review" string="Enviar a revisión" type="object"
+                            invisible="state != 'controlled'"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            invisible="state not in ('controlled', 'review')"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_action_plans" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="action_plan_count" widget="statinfo" string="Acciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="hazard_description" placeholder="Peligro identificado"/></h2>
+                    </div>
+                    <group>
+                        <group string="Identificación">
+                            <field name="hazard_type_id"/>
+                            <field name="domain_type"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                            <field name="review_date"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="site_id" required="1"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                            <field name="activity_id"/>
+                        </group>
+                        <group string="Evaluación inherente">
+                            <field name="probability"/>
+                            <field name="severity"/>
+                            <field name="inherent_score"/>
+                            <field name="inherent_level" widget="badge"/>
+                        </group>
+                        <group string="Evaluación residual">
+                            <field name="residual_probability"/>
+                            <field name="residual_severity"/>
+                            <field name="residual_score"/>
+                            <field name="residual_level" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Controles" name="controls">
+                            <field name="control_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="control_type"/>
+                                    <field name="responsible_id" widget="many2one_avatar_user"/>
+                                    <field name="effective"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Descripción" name="description">
+                            <field name="risk_description"
+                                   placeholder="Descripción detallada del riesgo..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_risk_view_search" model="ir.ui.view">
+        <field name="name">hseq.risk.search</field>
+        <field name="model">hseq.risk</field>
+        <field name="arch" type="xml">
+            <search string="Riesgos">
+                <field name="name"/>
+                <field name="hazard_description"/>
+                <field name="site_id"/>
+                <filter string="Críticos" name="critical"
+                        domain="[('residual_level', '=', 'critical')]"/>
+                <filter string="Altos" name="high" domain="[('residual_level', '=', 'high')]"/>
+                <filter string="Abiertos" name="open" domain="[('state', '!=', 'closed')]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo de peligro" name="group_hazard"
+                            context="{'group_by': 'hazard_type_id'}"/>
+                    <filter string="Nivel residual" name="group_level"
+                            context="{'group_by': 'residual_level'}"/>
+                    <filter string="Dominio" name="group_domain"
+                            context="{'group_by': 'domain_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_risk_view_pivot" model="ir.ui.view">
+        <field name="name">hseq.risk.pivot</field>
+        <field name="model">hseq.risk</field>
+        <field name="arch" type="xml">
+            <pivot string="Matriz de riesgos">
+                <field name="site_id" type="row"/>
+                <field name="residual_level" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hseq_risk_action" model="ir.actions.act_window">
+        <field name="name">Riesgos</field>
+        <field name="res_model">hseq.risk</field>
+        <field name="view_mode">list,form,pivot</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <record id="hseq_hazard_type_action" model="ir.actions.act_window">
+        <field name="name">Tipos de Peligro</field>
+        <field name="res_model">hseq.hazard.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_hazard_type_view_list" model="ir.ui.view">
+        <field name="name">hseq.hazard.type.list</field>
+        <field name="model">hseq.hazard.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Peligro" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem id="menu_hseq_risk" name="Riesgos"
+              parent="hseq_core.menu_hseq_sst" action="hseq_risk_action" sequence="10"/>
+    <menuitem id="menu_hseq_hazard_type" name="Tipos de Peligro"
+              parent="hseq_core.menu_hseq_config" action="hseq_hazard_type_action" sequence="50"/>
+</odoo>

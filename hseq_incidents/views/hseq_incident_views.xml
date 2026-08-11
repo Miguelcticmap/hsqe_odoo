@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_incident_view_list" model="ir.ui.view">
+        <field name="name">hseq.incident.list</field>
+        <field name="model">hseq.incident</field>
+        <field name="arch" type="xml">
+            <list string="Incidentes"
+                  decoration-danger="severity in ('serious', 'fatal')">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="title"/>
+                <field name="incident_type"/>
+                <field name="severity" widget="badge"
+                       decoration-success="severity == 'minor'"
+                       decoration-warning="severity == 'moderate'"
+                       decoration-danger="severity in ('serious', 'fatal')"/>
+                <field name="site_id"/>
+                <field name="area_id" optional="show"/>
+                <field name="reported_by_id" widget="many2one_avatar_user" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"
+                       decoration-info="state not in ('closed',)"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_incident_view_form" model="ir.ui.view">
+        <field name="name">hseq.incident.form</field>
+        <field name="model">hseq.incident</field>
+        <field name="arch" type="xml">
+            <form string="Incidente">
+                <header>
+                    <button name="action_start_investigation" string="Iniciar investigación"
+                            type="object" class="btn-primary" invisible="state != 'reported'"
+                            groups="hseq_core.group_hseq_responsible"/>
+                    <button name="action_analysis" string="Análisis causal" type="object"
+                            class="btn-primary" invisible="state != 'investigation'"/>
+                    <button name="action_action_plan" string="Plan de acción" type="object"
+                            class="btn-primary" invisible="state != 'analysis'"/>
+                    <button name="action_follow_up" string="Seguimiento" type="object"
+                            class="btn-primary" invisible="state != 'action_plan'"/>
+                    <button name="action_verification" string="Verificación" type="object"
+                            class="btn-primary" invisible="state != 'follow_up'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            class="btn-primary" invisible="state != 'verification'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_action_plans" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="action_plan_count" widget="statinfo" string="Acciones"/>
+                        </button>
+                        <button name="action_view_attachments" type="object"
+                                class="oe_stat_button" icon="fa-paperclip">
+                            <field name="attachment_count" widget="statinfo" string="Evidencias"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Título del evento"/></h2>
+                    </div>
+                    <group>
+                        <group string="Clasificación">
+                            <field name="incident_type"/>
+                            <field name="severity"/>
+                            <field name="date"/>
+                            <field name="with_injury"/>
+                            <field name="body_part" invisible="not with_injury"/>
+                            <field name="lost_days" invisible="incident_type != 'accident'"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="site_id" required="1"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                            <field name="activity_id"/>
+                        </group>
+                        <group string="Personas">
+                            <field name="reported_by_id" widget="many2one_avatar_user"/>
+                            <field name="involved_partner_id"/>
+                            <field name="involved_name"/>
+                            <field name="witness_ids" widget="many2many_tags"/>
+                        </group>
+                        <group string="Investigación">
+                            <field name="investigator_id" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descripción" name="description">
+                            <field name="description" placeholder="Describa los hechos..."/>
+                        </page>
+                        <page string="Análisis causal" name="analysis"
+                              invisible="state == 'reported'">
+                            <group>
+                                <field name="immediate_cause"/>
+                                <field name="basic_cause"/>
+                                <field name="root_cause"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_incident_view_search" model="ir.ui.view">
+        <field name="name">hseq.incident.search</field>
+        <field name="model">hseq.incident</field>
+        <field name="arch" type="xml">
+            <search string="Incidentes">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="site_id"/>
+                <filter string="Accidentes" name="accidents"
+                        domain="[('incident_type', '=', 'accident')]"/>
+                <filter string="Incidentes" name="incidents"
+                        domain="[('incident_type', '=', 'incident')]"/>
+                <filter string="Casi accidentes" name="near_miss"
+                        domain="[('incident_type', '=', 'near_miss')]"/>
+                <filter string="Abiertos" name="open" domain="[('state', '!=', 'closed')]"/>
+                <separator/>
+                <filter string="Fecha" name="filter_date" date="date"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'incident_type'}"/>
+                    <filter string="Severidad" name="group_severity" context="{'group_by': 'severity'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_incident_view_pivot" model="ir.ui.view">
+        <field name="name">hseq.incident.pivot</field>
+        <field name="model">hseq.incident</field>
+        <field name="arch" type="xml">
+            <pivot string="Incidentes">
+                <field name="site_id" type="row"/>
+                <field name="incident_type" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hseq_incident_view_graph" model="ir.ui.view">
+        <field name="name">hseq.incident.graph</field>
+        <field name="model">hseq.incident</field>
+        <field name="arch" type="xml">
+            <graph string="Incidentes" type="bar">
+                <field name="site_id"/>
+                <field name="incident_type"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hseq_incident_action" model="ir.actions.act_window">
+        <field name="name">Incidentes</field>
+        <field name="res_model">hseq.incident</field>
+        <field name="view_mode">list,form,pivot,graph</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <menuitem id="menu_hseq_incident" name="Incidentes"
+              parent="hseq_core.menu_hseq_sst" action="hseq_incident_action" sequence="20"/>
+</odoo>

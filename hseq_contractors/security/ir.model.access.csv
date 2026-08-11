@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_contractor_user,hseq.contractor.user,model_hseq_contractor,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_contractor_responsible,hseq.contractor.responsible,model_hseq_contractor,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_contractor_manager,hseq.contractor.manager,model_hseq_contractor,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_contractor_document_user,hseq.contractor.document.user,model_hseq_contractor_document,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_contractor_document_responsible,hseq.contractor.document.responsible,model_hseq_contractor_document,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_contractor_document_manager,hseq.contractor.document.manager,model_hseq_contractor_document,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_contractor_worker_user,hseq.contractor.worker.user,model_hseq_contractor_worker,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_contractor_worker_responsible,hseq.contractor.worker.responsible,model_hseq_contractor_worker,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_contractor_worker_manager,hseq.contractor.worker.manager,model_hseq_contractor_worker,hseq_core.group_hseq_manager,1,1,1,1

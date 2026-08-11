@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rule_hseq_waste_record_site_user" model="ir.rule">
+        <field name="name">Residuos: sedes autorizadas</field>
+        <field name="model_id" ref="model_hseq_waste_record"/>
+        <field name="domain_force">['|', ('site_id', '=', False), ('site_id', 'in', user.hseq_site_ids.ids)] if user.hseq_site_ids else [(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hseq_core.group_hseq_user'))]"/>
+    </record>
+    <record id="rule_hseq_waste_record_site_manager" model="ir.rule">
+        <field name="name">Residuos: administradores todas las sedes</field>
+        <field name="model_id" ref="model_hseq_waste_record"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hseq_core.group_hseq_manager'))]"/>
+    </record>
+</odoo>

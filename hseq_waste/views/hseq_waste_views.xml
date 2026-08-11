@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_waste_record_view_list" model="ir.ui.view">
+        <field name="name">hseq.waste.record.list</field>
+        <field name="model">hseq.waste.record</field>
+        <field name="arch" type="xml">
+            <list string="Residuos" decoration-danger="classification == 'hazardous'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="waste_type_id"/>
+                <field name="classification"/>
+                <field name="site_id"/>
+                <field name="quantity" sum="Total"/>
+                <field name="uom"/>
+                <field name="manager_partner_id" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'disposed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_waste_record_view_form" model="ir.ui.view">
+        <field name="name">hseq.waste.record.form</field>
+        <field name="model">hseq.waste.record</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Residuo">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_dispose" string="Marcar dispuesto" type="object"
+                            class="btn-primary" invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Residuo">
+                            <field name="waste_type_id"/>
+                            <field name="classification"/>
+                            <field name="date"/>
+                            <field name="quantity"/>
+                            <field name="uom"/>
+                        </group>
+                        <group string="Ubicación y disposición">
+                            <field name="site_id" required="1"/>
+                            <field name="area_id"/>
+                            <field name="manager_partner_id"/>
+                            <field name="disposal_method"/>
+                            <field name="certificate"/>
+                        </group>
+                    </group>
+                    <group string="Observaciones">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_waste_record_view_search" model="ir.ui.view">
+        <field name="name">hseq.waste.record.search</field>
+        <field name="model">hseq.waste.record</field>
+        <field name="arch" type="xml">
+            <search string="Residuos">
+                <field name="name"/>
+                <field name="waste_type_id"/>
+                <field name="site_id"/>
+                <filter string="Peligrosos" name="hazardous"
+                        domain="[('classification', '=', 'hazardous')]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'waste_type_id'}"/>
+                    <filter string="Clasificación" name="group_class"
+                            context="{'group_by': 'classification'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_waste_record_view_pivot" model="ir.ui.view">
+        <field name="name">hseq.waste.record.pivot</field>
+        <field name="model">hseq.waste.record</field>
+        <field name="arch" type="xml">
+            <pivot string="Residuos">
+                <field name="site_id" type="row"/>
+                <field name="classification" type="col"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hseq_waste_record_action" model="ir.actions.act_window">
+        <field name="name">Residuos</field>
+        <field name="res_model">hseq.waste.record</field>
+        <field name="view_mode">list,form,pivot</field>
+    </record>
+
+    <record id="hseq_waste_type_action" model="ir.actions.act_window">
+        <field name="name">Tipos de Residuo</field>
+        <field name="res_model">hseq.waste.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_waste_type_view_list" model="ir.ui.view">
+        <field name="name">hseq.waste.type.list</field>
+        <field name="model">hseq.waste.type</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de Residuo" editable="bottom">
+                <field name="name"/>
+                <field name="classification"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem id="menu_hseq_waste" name="Residuos"
+              parent="hseq_core.menu_hseq_environment"
+              action="hseq_waste_record_action" sequence="20"/>
+    <menuitem id="menu_hseq_waste_type" name="Tipos de Residuo"
+              parent="hseq_core.menu_hseq_config"
+              action="hseq_waste_type_action" sequence="80"/>
+</odoo>

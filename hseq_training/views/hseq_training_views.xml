@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_training_session_view_list" model="ir.ui.view">
+        <field name="name">hseq.training.session.list</field>
+        <field name="model">hseq.training.session</field>
+        <field name="arch" type="xml">
+            <list string="Capacitaciones">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="course_id"/>
+                <field name="site_id"/>
+                <field name="target"/>
+                <field name="attendee_count" string="Participantes"/>
+                <field name="attendance_rate" widget="progressbar"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_training_session_view_form" model="ir.ui.view">
+        <field name="name">hseq.training.session.form</field>
+        <field name="model">hseq.training.session</field>
+        <field name="arch" type="xml">
+            <form string="Sesión de Capacitación">
+                <header>
+                    <button name="action_done" string="Marcar ejecutada" type="object"
+                            class="btn-primary" invisible="state != 'planned'"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                            invisible="state != 'planned'"/>
+                    <button name="action_replan" string="Reprogramar" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="planned,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Capacitación">
+                            <field name="course_id"/>
+                            <field name="date"/>
+                            <field name="trainer"/>
+                            <field name="trainer_partner_id"/>
+                        </group>
+                        <group string="Alcance">
+                            <field name="target"/>
+                            <field name="site_id" invisible="target == 'company'"/>
+                            <field name="area_id" invisible="target in ('company', 'site')"/>
+                            <field name="process_id"
+                                   invisible="target in ('company', 'site', 'area')"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Participantes" name="attendees">
+                            <field name="attendee_ids">
+                                <list editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="attended"/>
+                                    <field name="score"/>
+                                    <field name="passed"/>
+                                    <field name="certificate_expiry"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_training_session_view_calendar" model="ir.ui.view">
+        <field name="name">hseq.training.session.calendar</field>
+        <field name="model">hseq.training.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Capacitaciones" date_start="date" color="course_id">
+                <field name="course_id"/>
+                <field name="site_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hseq_training_session_view_search" model="ir.ui.view">
+        <field name="name">hseq.training.session.search</field>
+        <field name="model">hseq.training.session</field>
+        <field name="arch" type="xml">
+            <search string="Capacitaciones">
+                <field name="name"/>
+                <field name="course_id"/>
+                <field name="site_id"/>
+                <filter string="Programadas" name="planned"
+                        domain="[('state', '=', 'planned')]"/>
+                <separator/>
+                <group>
+                    <filter string="Curso" name="group_course" context="{'group_by': 'course_id'}"/>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_training_session_action" model="ir.actions.act_window">
+        <field name="name">Capacitaciones</field>
+        <field name="res_model">hseq.training.session</field>
+        <field name="view_mode">list,form,calendar</field>
+    </record>
+
+    <record id="hseq_training_course_action" model="ir.actions.act_window">
+        <field name="name">Cursos</field>
+        <field name="res_model">hseq.training.course</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_training_course_view_list" model="ir.ui.view">
+        <field name="name">hseq.training.course.list</field>
+        <field name="model">hseq.training.course</field>
+        <field name="arch" type="xml">
+            <list string="Cursos" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="duration_hours"/>
+                <field name="validity_months"/>
+                <field name="mandatory"/>
+            </list>
+        </field>
+    </record>
+
+    <menuitem id="menu_hseq_training" name="Capacitaciones"
+              parent="hseq_core.menu_hseq_sst"
+              action="hseq_training_session_action" sequence="50"/>
+    <menuitem id="menu_hseq_training_course" name="Cursos de Capacitación"
+              parent="hseq_core.menu_hseq_config"
+              action="hseq_training_course_action" sequence="100"/>
+</odoo>

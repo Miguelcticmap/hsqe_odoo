@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_nonconformity_view_list" model="ir.ui.view">
+        <field name="name">hseq.nonconformity.list</field>
+        <field name="model">hseq.nonconformity</field>
+        <field name="arch" type="xml">
+            <list string="No Conformidades" decoration-danger="nc_type == 'major'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="title"/>
+                <field name="source"/>
+                <field name="nc_type" widget="badge"
+                       decoration-danger="nc_type == 'major'"
+                       decoration-warning="nc_type == 'minor'"/>
+                <field name="site_id"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_nonconformity_view_form" model="ir.ui.view">
+        <field name="name">hseq.nonconformity.form</field>
+        <field name="model">hseq.nonconformity</field>
+        <field name="arch" type="xml">
+            <form string="No Conformidad">
+                <header>
+                    <button name="action_analysis" string="Analizar" type="object"
+                            class="btn-primary" invisible="state != 'new'"/>
+                    <button name="action_correction" string="Corrección" type="object"
+                            class="btn-primary" invisible="state != 'analysis'"/>
+                    <button name="action_corrective" string="Acción correctiva" type="object"
+                            class="btn-primary" invisible="state != 'correction'"/>
+                    <button name="action_implementation" string="Implementar" type="object"
+                            class="btn-primary" invisible="state != 'corrective_action'"/>
+                    <button name="action_verification" string="Verificar" type="object"
+                            class="btn-primary" invisible="state != 'implementation'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <button name="action_close" string="Cerrar" type="object"
+                            class="btn-primary" invisible="state != 'verification'"
+                            groups="hseq_core.group_hseq_supervisor"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_action_plans" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="action_plan_count" widget="statinfo" string="Acciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Título de la no conformidad"/></h2>
+                    </div>
+                    <group>
+                        <group string="Clasificación">
+                            <field name="date"/>
+                            <field name="source"/>
+                            <field name="nc_type"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="process_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Descripción" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Análisis y corrección" name="analysis">
+                            <group>
+                                <field name="root_cause"/>
+                                <field name="correction"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_nonconformity_view_search" model="ir.ui.view">
+        <field name="name">hseq.nonconformity.search</field>
+        <field name="model">hseq.nonconformity</field>
+        <field name="arch" type="xml">
+            <search string="No Conformidades">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="site_id"/>
+                <filter string="Abiertas" name="open" domain="[('state', '!=', 'closed')]"/>
+                <filter string="Mayores" name="major" domain="[('nc_type', '=', 'major')]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Origen" name="group_source" context="{'group_by': 'source'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_nonconformity_action" model="ir.actions.act_window">
+        <field name="name">No Conformidades</field>
+        <field name="res_model">hseq.nonconformity</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_open': 1}</field>
+    </record>
+
+    <menuitem id="menu_hseq_nonconformity" name="No Conformidades"
+              parent="hseq_core.menu_hseq_quality" action="hseq_nonconformity_action" sequence="10"/>
+</odoo>

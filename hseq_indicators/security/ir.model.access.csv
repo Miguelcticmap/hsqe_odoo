@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_indicator_user,hseq.indicator.user,model_hseq_indicator,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_indicator_responsible,hseq.indicator.responsible,model_hseq_indicator,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_indicator_manager,hseq.indicator.manager,model_hseq_indicator,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_indicator_value_user,hseq.indicator.value.user,model_hseq_indicator_value,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_indicator_value_responsible,hseq.indicator.value.responsible,model_hseq_indicator_value,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_indicator_value_manager,hseq.indicator.value.manager,model_hseq_indicator_value,hseq_core.group_hseq_manager,1,1,1,1

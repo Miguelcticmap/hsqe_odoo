@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_waste_type_user,hseq.waste.type.user,model_hseq_waste_type,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_waste_type_manager,hseq.waste.type.manager,model_hseq_waste_type,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_waste_record_user,hseq.waste.record.user,model_hseq_waste_record,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_waste_record_responsible,hseq.waste.record.responsible,model_hseq_waste_record,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_waste_record_manager,hseq.waste.record.manager,model_hseq_waste_record,hseq_core.group_hseq_manager,1,1,1,1

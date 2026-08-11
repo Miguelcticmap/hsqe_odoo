@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_indicator_view_list" model="ir.ui.view">
+        <field name="name">hseq.indicator.list</field>
+        <field name="model">hseq.indicator</field>
+        <field name="arch" type="xml">
+            <list string="Indicadores">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="domain_type"/>
+                <field name="frequency"/>
+                <field name="target"/>
+                <field name="last_value"/>
+                <field name="uom"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_indicator_view_form" model="ir.ui.view">
+        <field name="name">hseq.indicator.form</field>
+        <field name="model">hseq.indicator</field>
+        <field name="arch" type="xml">
+            <form string="Indicador">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nombre del indicador"/></h1>
+                    </div>
+                    <group>
+                        <group string="Definición">
+                            <field name="code"/>
+                            <field name="domain_type"/>
+                            <field name="uom"/>
+                            <field name="frequency"/>
+                        </group>
+                        <group string="Meta">
+                            <field name="target"/>
+                            <field name="target_direction"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mediciones" name="values">
+                            <field name="value_ids">
+                                <list editable="bottom" decoration-danger="not achieved">
+                                    <field name="date"/>
+                                    <field name="site_id"/>
+                                    <field name="value"/>
+                                    <field name="target"/>
+                                    <field name="achieved"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Fórmula" name="formula">
+                            <field name="formula"
+                                   placeholder="Definición operacional del indicador..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_indicator_value_view_graph" model="ir.ui.view">
+        <field name="name">hseq.indicator.value.graph</field>
+        <field name="model">hseq.indicator.value</field>
+        <field name="arch" type="xml">
+            <graph string="Mediciones" type="line">
+                <field name="date" interval="month"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hseq_indicator_value_view_pivot" model="ir.ui.view">
+        <field name="name">hseq.indicator.value.pivot</field>
+        <field name="model">hseq.indicator.value</field>
+        <field name="arch" type="xml">
+            <pivot string="Mediciones">
+                <field name="indicator_id" type="row"/>
+                <field name="site_id" type="col"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hseq_indicator_value_view_list" model="ir.ui.view">
+        <field name="name">hseq.indicator.value.list</field>
+        <field name="model">hseq.indicator.value</field>
+        <field name="arch" type="xml">
+            <list string="Mediciones" editable="bottom">
+                <field name="date"/>
+                <field name="indicator_id"/>
+                <field name="site_id"/>
+                <field name="value"/>
+                <field name="target"/>
+                <field name="achieved"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_indicator_action" model="ir.actions.act_window">
+        <field name="name">Indicadores</field>
+        <field name="res_model">hseq.indicator</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_indicator_value_action" model="ir.actions.act_window">
+        <field name="name">Mediciones</field>
+        <field name="res_model">hseq.indicator.value</field>
+        <field name="view_mode">list,graph,pivot</field>
+    </record>
+
+    <menuitem id="menu_hseq_indicator" name="Indicadores"
+              parent="hseq_core.menu_hseq_indicators"
+              action="hseq_indicator_action" sequence="10"/>
+    <menuitem id="menu_hseq_indicator_value" name="Mediciones"
+              parent="hseq_core.menu_hseq_indicators"
+              action="hseq_indicator_value_action" sequence="20"/>
+</odoo>

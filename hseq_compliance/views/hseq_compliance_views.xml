@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_legal_requirement_view_list" model="ir.ui.view">
+        <field name="name">hseq.legal.requirement.list</field>
+        <field name="model">hseq.legal.requirement</field>
+        <field name="arch" type="xml">
+            <list string="Requisitos Legales" decoration-danger="is_overdue">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="domain_type"/>
+                <field name="site_id"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="periodicity" optional="show"/>
+                <field name="date_deadline"/>
+                <field name="is_overdue" column_invisible="1"/>
+                <field name="compliance_state" widget="badge"
+                       decoration-success="compliance_state == 'compliant'"
+                       decoration-danger="compliance_state == 'non_compliant'"
+                       decoration-info="compliance_state == 'in_progress'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_legal_requirement_view_form" model="ir.ui.view">
+        <field name="name">hseq.legal.requirement.form</field>
+        <field name="model">hseq.legal.requirement</field>
+        <field name="arch" type="xml">
+            <form string="Requisito Legal">
+                <header>
+                    <button name="action_in_progress" string="En gestión" type="object"
+                            class="btn-primary" invisible="compliance_state != 'pending'"/>
+                    <button name="action_compliant" string="Marcar cumplido" type="object"
+                            class="btn-primary"
+                            invisible="compliance_state not in ('pending', 'in_progress', 'non_compliant')"
+                            groups="hseq_core.group_hseq_responsible"/>
+                    <button name="action_non_compliant" string="Marcar incumplido" type="object"
+                            invisible="compliance_state not in ('pending', 'in_progress')"/>
+                    <field name="compliance_state" widget="statusbar"
+                           statusbar_visible="pending,in_progress,compliant"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h2><field name="title" placeholder="Norma o requisito legal"/></h2>
+                    </div>
+                    <group>
+                        <group string="Requisito">
+                            <field name="authority"/>
+                            <field name="domain_type"/>
+                            <field name="periodicity"/>
+                            <field name="date_deadline"/>
+                        </group>
+                        <group string="Aplicación">
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                    <group string="Obligación">
+                        <field name="obligation" nolabel="1"/>
+                    </group>
+                    <group string="Evidencia de cumplimiento">
+                        <field name="evidence" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_legal_requirement_view_search" model="ir.ui.view">
+        <field name="name">hseq.legal.requirement.search</field>
+        <field name="model">hseq.legal.requirement</field>
+        <field name="arch" type="xml">
+            <search string="Requisitos Legales">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="site_id"/>
+                <filter string="Vencidos" name="overdue" domain="[('is_overdue', '=', True)]"/>
+                <filter string="Pendientes" name="pending"
+                        domain="[('compliance_state', 'in', ('pending', 'in_progress'))]"/>
+                <separator/>
+                <group>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Dominio" name="group_domain"
+                            context="{'group_by': 'domain_type'}"/>
+                    <filter string="Cumplimiento" name="group_compliance"
+                            context="{'group_by': 'compliance_state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_legal_requirement_action" model="ir.actions.act_window">
+        <field name="name">Requisitos Legales</field>
+        <field name="res_model">hseq.legal.requirement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_legal_requirement" name="Requisitos Legales"
+              parent="hseq_core.menu_hseq_compliance"
+              action="hseq_legal_requirement_action" sequence="10"/>
+</odoo>

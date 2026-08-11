@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_training_course_user,hseq.training.course.user,model_hseq_training_course,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_training_course_responsible,hseq.training.course.responsible,model_hseq_training_course,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_training_course_manager,hseq.training.course.manager,model_hseq_training_course,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_training_session_user,hseq.training.session.user,model_hseq_training_session,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_training_session_responsible,hseq.training.session.responsible,model_hseq_training_session,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_training_session_manager,hseq.training.session.manager,model_hseq_training_session,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_training_attendee_user,hseq.training.attendee.user,model_hseq_training_attendee,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_training_attendee_responsible,hseq.training.attendee.responsible,model_hseq_training_attendee,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_training_attendee_manager,hseq.training.attendee.manager,model_hseq_training_attendee,hseq_core.group_hseq_manager,1,1,1,1

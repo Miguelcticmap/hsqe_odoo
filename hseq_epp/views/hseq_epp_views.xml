@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hseq_epp_item_view_list" model="ir.ui.view">
+        <field name="name">hseq.epp.item.list</field>
+        <field name="model">hseq.epp.item</field>
+        <field name="arch" type="xml">
+            <list string="Catálogo EPP" editable="bottom">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="lifespan_months"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_epp_delivery_view_list" model="ir.ui.view">
+        <field name="name">hseq.epp.delivery.list</field>
+        <field name="model">hseq.epp.delivery</field>
+        <field name="arch" type="xml">
+            <list string="Entregas EPP">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="employee_partner_id"/>
+                <field name="delivery_type"/>
+                <field name="site_id"/>
+                <field name="responsible_id" widget="many2one_avatar_user"/>
+                <field name="accepted"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hseq_epp_delivery_view_form" model="ir.ui.view">
+        <field name="name">hseq.epp.delivery.form</field>
+        <field name="model">hseq.epp.delivery</field>
+        <field name="arch" type="xml">
+            <form string="Entrega de EPP">
+                <header>
+                    <button name="action_done" string="Confirmar entrega" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_draft" string="Volver a borrador" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_partner_id"/>
+                            <field name="delivery_type"/>
+                            <field name="date"/>
+                            <field name="accepted"/>
+                        </group>
+                        <group>
+                            <field name="site_id"/>
+                            <field name="area_id"/>
+                            <field name="responsible_id" widget="many2one_avatar_user"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Elementos" name="lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="item_id"/>
+                                    <field name="quantity"/>
+                                    <field name="size"/>
+                                    <field name="expiry_date"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Observaciones" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hseq_epp_delivery_view_search" model="ir.ui.view">
+        <field name="name">hseq.epp.delivery.search</field>
+        <field name="model">hseq.epp.delivery</field>
+        <field name="arch" type="xml">
+            <search string="Entregas EPP">
+                <field name="name"/>
+                <field name="employee_partner_id"/>
+                <field name="site_id"/>
+                <separator/>
+                <group>
+                    <filter string="Empleado" name="group_employee"
+                            context="{'group_by': 'employee_partner_id'}"/>
+                    <filter string="Sede" name="group_site" context="{'group_by': 'site_id'}"/>
+                    <filter string="Tipo" name="group_type" context="{'group_by': 'delivery_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hseq_epp_delivery_action" model="ir.actions.act_window">
+        <field name="name">Entregas EPP</field>
+        <field name="res_model">hseq.epp.delivery</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="hseq_epp_item_action" model="ir.actions.act_window">
+        <field name="name">Catálogo EPP</field>
+        <field name="res_model">hseq.epp.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hseq_epp" name="EPP"
+              parent="hseq_core.menu_hseq_sst" action="hseq_epp_delivery_action" sequence="40"/>
+    <menuitem id="menu_hseq_epp_item" name="Catálogo EPP"
+              parent="hseq_core.menu_hseq_config" action="hseq_epp_item_action" sequence="70"/>
+</odoo>

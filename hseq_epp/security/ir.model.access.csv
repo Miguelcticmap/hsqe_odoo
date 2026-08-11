@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hseq_epp_item_user,hseq.epp.item.user,model_hseq_epp_item,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_epp_item_responsible,hseq.epp.item.responsible,model_hseq_epp_item,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_epp_item_manager,hseq.epp.item.manager,model_hseq_epp_item,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_epp_delivery_user,hseq.epp.delivery.user,model_hseq_epp_delivery,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_epp_delivery_responsible,hseq.epp.delivery.responsible,model_hseq_epp_delivery,hseq_core.group_hseq_responsible,1,1,1,0
+access_hseq_epp_delivery_manager,hseq.epp.delivery.manager,model_hseq_epp_delivery,hseq_core.group_hseq_manager,1,1,1,1
+access_hseq_epp_delivery_line_user,hseq.epp.delivery.line.user,model_hseq_epp_delivery_line,hseq_core.group_hseq_user,1,0,0,0
+access_hseq_epp_delivery_line_responsible,hseq.epp.delivery.line.responsible,model_hseq_epp_delivery_line,hseq_core.group_hseq_responsible,1,1,1,1
+access_hseq_epp_delivery_line_manager,hseq.epp.delivery.line.manager,model_hseq_epp_delivery_line,hseq_core.group_hseq_manager,1,1,1,1
